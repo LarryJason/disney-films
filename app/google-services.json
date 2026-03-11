@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "347720479147",
+    "firebase_url": "https://disneyfilms-1266a-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "disneyfilms-1266a",
+    "storage_bucket": "disneyfilms-1266a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347720479147:android:2deab4f5c12d6a9524e2ee",
+        "android_client_info": {
+          "package_name": "fr.example.tuenolarryjason.disneyfilms"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyXcPlln0-U2SFMhy1PQjbvuo0N73S5_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
