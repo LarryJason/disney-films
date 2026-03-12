@@ -1,0 +1,144 @@
+package fr.example.tuenolarryjason.disneyfilms.userInterfaces
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import fr.example.tuenolarryjason.disneyfilms.models.UserFilm
+
+@Composable
+fun ProfileScreen(
+    userEmail: String,
+    onLogoutClick: () -> Unit,
+    onMyFilmsClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Mon Profil", style = MaterialTheme.typography.headlineLarge)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Connecté : $userEmail", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline)
+        
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = onMyFilmsClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+        ) {
+            Icon(Icons.Default.Star, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text("Mes Films")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        OutlinedButton(
+            onClick = onLogoutClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Se déconnecter")
+        }
+    }
+}
+
+@Composable
+fun MyFilmsScreen(onFilmClick: (String) -> Unit) {
+    val auth = FirebaseAuth.getInstance()
+    val userId = auth.currentUser?.uid
+    val userFilmsRef = FirebaseDatabase.getInstance().getReference("user_films").child(userId ?: "anonymous")
+    
+    var watchedFilms by remember { mutableStateOf(listOf<UserFilm>()) }
+    var toWatchFilms by remember { mutableStateOf(listOf<UserFilm>()) }
+    var ownedFilms by remember { mutableStateOf(listOf<UserFilm>()) }
+
+    LaunchedEffect(userId) {
+        userFilmsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val watched = mutableListOf<UserFilm>()
+                val toWatch = mutableListOf<UserFilm>()
+                val owned = mutableListOf<UserFilm>()
+                
+                for (filmSnapshot in snapshot.children) {
+                    val userFilm = filmSnapshot.getValue(UserFilm::class.java)
+                    if (userFilm != null) {
+                        if (userFilm.isWatched) watched.add(userFilm)
+                        if (userFilm.wantToWatch) toWatch.add(userFilm)
+                        if (userFilm.ownOnDVD) owned.add(userFilm)
+                    }
+                }
+                watchedFilms = watched
+                toWatchFilms = toWatch
+                ownedFilms = owned
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item { Text("Mes Films", style = MaterialTheme.typography.headlineMedium) }
+
+        if (ownedFilms.isNotEmpty()) {
+            item { Text("Ma Collection (DVD/Blu-ray)", style = MaterialTheme.typography.titleLarge) }
+            items(ownedFilms) { film ->
+                ListCardItem(title = film.filmTitle, icon = Icons.Default.Star, onClick = { onFilmClick(film.filmTitle) })
+            }
+        }
+
+        if (toWatchFilms.isNotEmpty()) {
+            item { Text("À regarder", style = MaterialTheme.typography.titleLarge) }
+            items(toWatchFilms) { film ->
+                ListCardItem(title = film.filmTitle, icon = Icons.Default.Star, onClick = { onFilmClick(film.filmTitle) })
+            }
+        }
+
+        if (watchedFilms.isNotEmpty()) {
+            item { Text("Films vus", style = MaterialTheme.typography.titleLarge) }
+            items(watchedFilms) { film ->
+                ListCardItem(title = film.filmTitle, icon = Icons.Default.Star, onClick = { onFilmClick(film.filmTitle) })
+            }
+        }
+
+        if (ownedFilms.isEmpty() && toWatchFilms.isEmpty() && watchedFilms.isEmpty()) {
+            item {
+                Text("Vous n'avez pas encore ajouté de films à votre collection.", style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+    }
+}

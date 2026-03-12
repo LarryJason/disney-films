@@ -34,7 +34,7 @@ fun DisneyBottomBar(
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
-                            // Évite d'accumuler les écrans dans la pile de navigation
+
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }

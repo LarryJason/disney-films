@@ -37,7 +37,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
 
-        // Vérification de la session utilisateur dès l'ouverture
+
         if (auth.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()

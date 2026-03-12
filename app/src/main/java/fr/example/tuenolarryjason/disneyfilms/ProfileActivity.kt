@@ -25,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth
 import fr.example.tuenolarryjason.disneyfilms.auth.LoginActivity
 import fr.example.tuenolarryjason.disneyfilms.ui.theme.DisneyFilmsTheme
 import androidx.navigation.compose.rememberNavController
+import fr.example.tuenolarryjason.disneyfilms.userInterfaces.ProfileScreen
+
 class ProfileActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
 
@@ -49,7 +51,7 @@ class ProfileActivity : ComponentActivity() {
                         DisneyBottomBar(navController = rememberNavController())
                     }
                 ) { innerPadding ->
-                    ProfileScreen(
+                    ProfileScreen (
                         modifier = Modifier.padding(innerPadding),
                         userEmail = currentUser.email ?: "Unknown",
                         onLogoutClick = {
@@ -81,9 +83,9 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Connecté en tant que :", style = MaterialTheme.typography.bodyLarge)
         Text(text = userEmail, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
-        
+
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         Button(
             onClick = onLogoutClick,
             modifier = Modifier.fillMaxWidth()

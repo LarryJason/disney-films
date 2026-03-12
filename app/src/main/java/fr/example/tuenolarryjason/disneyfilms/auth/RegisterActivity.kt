@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import fr.example.tuenolarryjason.disneyfilms.ProfileActivity
 import fr.example.tuenolarryjason.disneyfilms.ui.theme.DisneyFilmsTheme
 
@@ -45,6 +46,12 @@ class RegisterActivity : ComponentActivity() {
                             auth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(this) { task ->
                                     if (task.isSuccessful) {
+                                        val userId = auth.currentUser?.uid
+                                        if (userId != null) {
+                                            // Save user email to database
+                                            val database = FirebaseDatabase.getInstance().getReference("users")
+                                            database.child(userId).child("email").setValue(email)
+                                        }
                                         startActivity(Intent(this, ProfileActivity::class.java))
                                         finish()
                                     } else {
