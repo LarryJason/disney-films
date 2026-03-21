@@ -5,27 +5,23 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import fr.example.tuenolarryjason.disneyfilms.ProfileActivity
@@ -48,7 +44,6 @@ class RegisterActivity : ComponentActivity() {
                                     if (task.isSuccessful) {
                                         val userId = auth.currentUser?.uid
                                         if (userId != null) {
-                                            // Save user email to database
                                             val database = FirebaseDatabase.getInstance().getReference("users")
                                             database.child(userId).child("email").setValue(email)
                                         }
@@ -78,39 +73,107 @@ fun RegisterScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    // Couleurs
+    val backgroundColor = Color(0xFF1B1B2F)
+    val inputBackground = Color(0xFF252542)
+    val primaryRed = Color(0xFFE94560)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .background(backgroundColor)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Enregistrement", style = MaterialTheme.typography.headlineLarge)
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
+        Spacer(modifier = Modifier.height(60.dp))
+        
+        Text(
+            text = "Sign Up",
+            style = MaterialTheme.typography.headlineLarge,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 32.sp
+        )
+        
+        Spacer(modifier = Modifier.height(40.dp))
+
+        // Email Field
+        OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Email", color = Color.Gray) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Color.Gray) },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = primaryRed,
+                unfocusedBorderColor = Color.Transparent,
+                focusedContainerColor = inputBackground,
+                unfocusedContainerColor = inputBackground,
+                cursorColor = primaryRed,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            ),
+            shape = RoundedCornerShape(24.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Mot de passe") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Mot de passe", color = Color.Gray) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Gray) },
+            trailingIcon = {
+                TextButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Text(if (passwordVisible) "Cacher" else "Montrer", color = Color.Gray)
+                }
+            },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = primaryRed,
+                unfocusedBorderColor = Color.Transparent,
+                focusedContainerColor = inputBackground,
+                unfocusedContainerColor = inputBackground,
+                cursorColor = primaryRed,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            ),
+            shape = RoundedCornerShape(24.dp)
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
+
+
+        Spacer(modifier = Modifier.height(32.dp))
+
         Button(
             onClick = { onRegisterClick(email, password) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = primaryRed),
+            shape = RoundedCornerShape(28.dp)
         ) {
-            Text("S'enregistrer")
+            Text("Sign up", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
-        TextButton(onClick = onLoginClick) {
-            Text("Déjà un compte ? Se connecter")
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Vous avez déjà un compte?", color = Color.Gray)
+            TextButton(onClick = onLoginClick) {
+                Text("Sign in", color = primaryRed)
+            }
         }
     }
 }

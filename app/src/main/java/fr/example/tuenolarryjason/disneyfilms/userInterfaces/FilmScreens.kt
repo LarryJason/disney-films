@@ -17,12 +17,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
+
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -208,9 +210,9 @@ fun FilmDetailScreen(filmTitle: String) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         StatusChip(
                             label = "Vu",
-                            icon = Icons.Default.Done,
-                            selected = userFilmStatus.isWatched,
-                            onSelectedChange = { updateStatus(userFilmStatus.copy(isWatched = it)) },
+                            icon = Icons.Default.Face,
+                            selected = userFilmStatus.watched,
+                            onSelectedChange = { updateStatus(userFilmStatus.copy(watched = it)) },
                             modifier = Modifier.weight(1f)
                         )
                         StatusChip(
@@ -224,7 +226,7 @@ fun FilmDetailScreen(filmTitle: String) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         StatusChip(
                             label = "DVD/Blu-ray",
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.Star,
                             selected = userFilmStatus.ownOnDVD,
                             onSelectedChange = { updateStatus(userFilmStatus.copy(ownOnDVD = it)) },
                             modifier = Modifier.weight(1f)

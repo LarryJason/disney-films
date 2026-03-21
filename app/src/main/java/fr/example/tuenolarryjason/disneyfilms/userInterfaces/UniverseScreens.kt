@@ -48,7 +48,7 @@ fun UniverseListScreen(onUniverseClick: (String) -> Unit) {
         Text("Les Univers Disney", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(universes) { universe ->
-                ListCardItem(title = universe, icon = Icons.Default.Star, onClick = { onUniverseClick(universe) })
+                ListCardItem(title = universe, icon = null, onClick = { onUniverseClick(universe) })
             }
         }
     }

@@ -44,7 +44,7 @@ fun CategoryListScreen(onCategoryClick: (String) -> Unit) {
         Text("Catégories", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(categories) { category ->
-                ListCardItem(title = category, icon = Icons.Default.Menu, onClick = { onCategoryClick(category) })
+                ListCardItem(title = category, icon = null, onClick = { onCategoryClick(category) })
             }
         }
     }
@@ -76,7 +76,7 @@ fun FranchiseListScreen(categoryName: String, onFranchiseClick: (String) -> Unit
         Text("Franchises de $categoryName", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(franchises) { franchise ->
-                ListCardItem(title = franchise, icon = Icons.Default.Place, onClick = { onFranchiseClick(franchise) })
+                ListCardItem(title = franchise, icon = null, onClick = { onFranchiseClick(franchise) })
             }
         }
     }

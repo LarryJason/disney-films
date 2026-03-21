@@ -112,11 +112,19 @@ fun MainScreen(navController: NavHostController) {
                     },
                     onMyFilmsClick = {
                         navController.navigate("mes_films")
+                    },
+                    onWatchedFilmsClick = {
+                        navController.navigate("films_vus")
                     }
                 )
             }
             composable("mes_films") {
                 MyFilmsScreen(onFilmClick = { filmTitle ->
+                    navController.navigate("film_details/${Uri.encode(filmTitle)}")
+                })
+            }
+            composable("films_vus") {
+                WatchedFilmsScreen(onFilmClick = { filmTitle ->
                     navController.navigate("film_details/${Uri.encode(filmTitle)}")
                 })
             }
