@@ -171,7 +171,7 @@ fun WatchedFilmsScreen(onFilmClick: (String) -> Unit) {
                 val list = mutableListOf<UserFilm>()
                 for (filmSnapshot in snapshot.children) {
                     val userFilm = filmSnapshot.getValue(UserFilm::class.java)
-                    // Utilise 'watched' qui est le nom dans le modèle
+
                     if (userFilm?.watched == true) {
                         list.add(userFilm)
                     }

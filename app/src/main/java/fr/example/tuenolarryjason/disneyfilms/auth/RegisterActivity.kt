@@ -100,7 +100,7 @@ fun RegisterScreen(
         
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Email Field
+
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
